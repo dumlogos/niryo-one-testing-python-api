@@ -72,6 +72,7 @@ class NiryoMover:
 		position_list[3] = math.radians(position_list[3] * 1000)
 		position_list[4] = math.radians(position_list[4] * 1000)
 		position_list[5] = math.radians(position_list[5] * 1000)
+		print('\n')
 		return position_list
 
 
@@ -84,8 +85,8 @@ class NiryoMover:
 		print(joints_list)
 		self.niryo_obj.move_joints(joints_list)
 
-	def moveAtPoints(self, pos=0):
-		if pos == 0:
+	def moveAtPoints(self, pl=0):
+		if pl == 0:
 			pl=self.getPositionList()
 		print('\n')
 		print(pl)
@@ -100,29 +101,36 @@ class NiryoMover:
 		if (self.manMode == 'joint_manipulate' or self.manMode == 'full'):
 			print("Manipulate by joints\n")
 			while int(input("\"1\" if have made, \"0\" if have not\n")) == 1:
-				print("Enter angles in degress:")
-				self.moveAtJoints()
+				try:
+					print("Enter angles in degress:")
+					self.moveAtJoints()
+				except NiryoOneException as e:
+					print e
 
 
 	def manipulateByPose(self):
 		if (self.manMode == 'pose_manipulate' or self.manMode == 'full'):
 			print("\nManipulate by pose\n")
 			while int(input("\"1\" if have made, \"0\" if have not\n")) == 1:
-				print("Enter every coordinate in mm:")
-			 	self.moveAtPoints()
-
+				try:
+					print("Enter every coordinate in mm:")
+				 	self.moveAtPoints()
+				except NiryoOneException as e:
+					print e
 
 	def manipulateByMultiplePoints(self):
 		if (self.manMode == 'pose_by_points'):
 			print('\nManipulate at points\n')
 			while int(input("\"1\" if have made, \"0\" if have not\n")) == 1:
-				points_count = int(input("Enter count of points: "))
-				positions_list = [self.getPositionList() for i in range(points_count)]
-				print(positions_list)
-				for position in positions_list:
-					print(position)
-					self.moveAtPoints(position)
-
+				try:
+					points_count = int(input("Enter count of points: "))
+					positions_list = [self.getPositionList() for i in range(points_count)]
+					print(positions_list)
+					for position in positions_list:
+						print(position)
+						self.moveAtPoints(position)
+				except NiryoOneException as e:
+					print e
 
 
 
